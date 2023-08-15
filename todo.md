@@ -1,3 +1,16 @@
 - [ ] Who's in?
-  - When an exchange is started the bot should ask "who's in?" and provide an emoji react
-  - Anyone who reacts to the emoji should have their name show up in the "who's in?" message
+  - [x] When an exchange is started the bot should ask "who's in?" and provide an emoji react
+  - (stretch) Anyone who reacts to the emoji should have their name show up in the "who's in?" message
+  - There should be a time limit on being able to join the exchange (stretch)
+    - the bot should ask for a time limit
+    - the bot should default the time limit to 24 hours
+  - Whoever started the exchange can progress the exchange with /progress-exchange
+    - When the exchange is progressed, the bot sends a messaging tagging people with the other person 
+    in the format "[player] you have ||(not tagged)||
+  - By default the exchange ends 7 days after it starts (someone said to `/progress-exchange`)
+    - 24 hours before it ends the exchange bot will ask if anyone wants to extend it. 
+      -If they message /extend-exchange the exchange is extended by another 24 hours
+    - When the exchange ends the bot will tag people to say who their playlist was made by
+  - Idea: people send their playlist songs to the bot? Which then updates a pinned message with all the playlist songs so far, like Collin's doc
+    - Format: 
+      - Name, list of songs 

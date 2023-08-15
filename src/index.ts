@@ -2,6 +2,8 @@ import {config} from "dotenv";
 import {Events} from "discord.js";
 import {EnhancedClient} from "./EnhancedClient";
 import {SecretsSchema} from "./schemas";
+import {signupMessageIdMappedToExchange} from "./SignupMessageIdMappedToExchange";
+import {updateListOfPlayersOnMessageReactChanges} from "./handlers/updateListOfPlayersOnMessageReactChanges";
 
 config({
     path: './env/.env.local'
@@ -16,23 +18,9 @@ client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-client.on(Events.MessageReactionAdd, async interaction => {
-    console.log('running reaction adding')
-    interaction.users.cache
-        .filter(usersWithReactions => !usersWithReactions.bot)
-        .forEach(usersWithReactions => {
-            console.log(usersWithReactions.tag)
-        })
-})
+client.on(Events.MessageReactionAdd, updateListOfPlayersOnMessageReactChanges)
 
-client.on(Events.MessageReactionRemove, async interaction => {
-    console.log('running reaction removal')
-    interaction.users.cache
-        .filter(usersWithReactions => !usersWithReactions.bot)
-        .forEach(usersWithReactions => {
-            console.log(usersWithReactions.tag)
-        })
-})
+client.on(Events.MessageReactionRemove, updateListOfPlayersOnMessageReactChanges)
 
 
 client.on(Events.InteractionCreate, async interaction => {

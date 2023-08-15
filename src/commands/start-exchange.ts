@@ -1,4 +1,5 @@
 import {ChatInputCommandInteraction, CollectorFilter, MessageReaction, SlashCommandBuilder, User} from "discord.js";
+import {Exchange, signupMessageIdMappedToExchange} from "../SignupMessageIdMappedToExchange";
 
 
 const startExchangeCommand = new SlashCommandBuilder()
@@ -8,10 +9,10 @@ const startExchangeCommand = new SlashCommandBuilder()
 const startExchangeCommandExecute = async function(interaction: ChatInputCommandInteraction) {
     await interaction.reply({content: 'Working on it!', ephemeral: true})
 
-    const followupMessage = await interaction.followUp(`@${interaction.user.displayName} started an exchange. Who's in?
+    const followupMessage = await interaction.followUp(`${interaction.user.toString()} started an exchange. Who's in?
      React with :notes: if you are!`)
 
-    const emojiFilter: CollectorFilter<[MessageReaction, User]> = (reaction) => false
+    signupMessageIdMappedToExchange.set(followupMessage.id, new Exchange(followupMessage.id))
 
     await followupMessage.react('🎶')
 }
