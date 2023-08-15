@@ -16,6 +16,24 @@ client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
+client.on(Events.MessageReactionAdd, async interaction => {
+    console.log('running reaction adding')
+    interaction.users.cache
+        .filter(usersWithReactions => !usersWithReactions.bot)
+        .forEach(usersWithReactions => {
+            console.log(usersWithReactions.tag)
+        })
+})
+
+client.on(Events.MessageReactionRemove, async interaction => {
+    console.log('running reaction removal')
+    interaction.users.cache
+        .filter(usersWithReactions => !usersWithReactions.bot)
+        .forEach(usersWithReactions => {
+            console.log(usersWithReactions.tag)
+        })
+})
+
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
@@ -29,9 +47,9 @@ client.on(Events.InteractionCreate, async interaction => {
     } catch (error) {
         console.error(error);
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true});
         } else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});
         }
     }
 })

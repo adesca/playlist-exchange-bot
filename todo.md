@@ -1,0 +1,3 @@
+- [ ] Who's in?
+  - When an exchange is started the bot should ask "who's in?" and provide an emoji react
+  - Anyone who reacts to the emoji should have their name show up in the "who's in?" message

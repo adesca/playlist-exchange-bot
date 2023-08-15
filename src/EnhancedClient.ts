@@ -11,7 +11,8 @@ export class EnhancedClient extends  Client {
         super({
             intents: [
                 IntentsBitField.Flags.Guilds,
-
+                IntentsBitField.Flags.GuildMessages,
+                IntentsBitField.Flags.GuildMessageReactions
             ]
         });
 
