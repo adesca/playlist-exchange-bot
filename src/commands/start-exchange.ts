@@ -12,10 +12,10 @@ const startExchangeCommandExecute = async function (interaction: ChatInputComman
 
     const guildId = interaction.guildId
     if (guildId) {
-        const followupMessage = await interaction.followUp(`${interaction.user.toString()} started an exchange. Who's in?
+        const followupMessage = await interaction.followUp(`${interaction.user.toString()} started a playlist exchange. Who's in?
      React with :notes: if you are!`)
 
-        state.set(guildId, new Exchange(followupMessage.id, guildId))
+        state.set(guildId, new Exchange(followupMessage.id, guildId, interaction.channelId))
 
         await followupMessage.react('🎶')
     } else {

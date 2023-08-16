@@ -8,7 +8,8 @@ const SecretsSchema = z.object({
 })
 
 const ConfigurationSchema = z.object({
-    exchangeLength: z.string().nonempty()
+    exchangeLength: z.string().nonempty(),
+    remindAt: z.string().nonempty()
 })
 
 config({

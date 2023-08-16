@@ -2,6 +2,10 @@ import {Events} from "discord.js";
 import {EnhancedClient} from "./EnhancedClient";
 import {updateListOfPlayersOnMessageReactChanges} from "./handlers/updateListOfPlayersOnMessageReactChanges";
 import {secrets} from "./config";
+import {Duration} from "luxon";
+import {
+    checkIfAnyExchangesNeedToSendRemindersOrAreFinished
+} from "./handlers/checkIfAnyExchangesNeedToSendRemindersOrAreFinished";
 
 const client = new EnhancedClient()
 
@@ -14,7 +18,6 @@ client.once(Events.ClientReady, c => {
 client.on(Events.MessageReactionAdd, updateListOfPlayersOnMessageReactChanges)
 
 client.on(Events.MessageReactionRemove, updateListOfPlayersOnMessageReactChanges)
-
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
@@ -37,3 +40,10 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Log in to Discord with your client's token
 client.login(secrets.token);
+
+const handle = setInterval(checkIfAnyExchangesNeedToSendRemindersOrAreFinished,
+    Duration.fromObject({seconds: 30}).as('milliseconds'), client)
+process.on('exit', () => {
+    clearInterval(handle)
+    console.log('exiting')
+})

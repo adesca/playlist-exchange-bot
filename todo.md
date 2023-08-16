@@ -16,10 +16,12 @@
   - [x] Bot messages the channel saying "Assignments sent to [x]", where x is everyone who signed up
   - [x] Bot says how long people have to submit songs (value is configured through environment variables, but defaults to 1 week)
     - (Stretch) time is configurable
-  - Bot reminds people that the exchange will end 24 hours before it ends
+  - [x] Bot reminds people that the exchange will end 24 hours before it ends
     - (stretch) a person can extend the exchange for another 24 hours with /extend-exchange
 - [ ] The reveal
   - When the exchange ends the bot will tag people to say who their playlist was made by
 - [ ] Post reveal (Stretch)
   - Bot asks everyone for their top songs
   - Bot creates a playlist of the top songs
+- [ ] Deploy to render
+  - See if discord keeps the app alive in the free tier

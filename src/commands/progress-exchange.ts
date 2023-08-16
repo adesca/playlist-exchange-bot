@@ -1,6 +1,6 @@
 import {CommandDetails} from "./command-details";
 import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
-import {getExchangeOrThrow} from "../State";
+import {getExchangeOrThrow, setExchangeEndDate} from "../State";
 import {getGuildIDOrThrow, rotateArray} from "../util";
 import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";
@@ -33,13 +33,14 @@ async function execute(interaction: ChatInputCommandInteraction) {
     }
 
     const exchangeLength = Duration.fromISO(configuration.exchangeLength)
-    const exchangeEndDate = DateTime.now().plus(exchangeLength).toUnixInteger()
+    const exchangeEndDate = DateTime.now().plus(exchangeLength)
+    setExchangeEndDate(getGuildIDOrThrow(interaction), exchangeLength, exchangeEndDate)
 
     const playerList = exchange.players.map(player => "- " + player.toString)
     await interaction.channel!.send(`Assignments sent out! The following players are in the exchange: 
     ${playerList.join('\n')}
     
-    The exchange will wrap <t:${exchangeEndDate}:R>, and drawn players will be revealed on <t:${exchangeEndDate}:f>
+    The exchange will wrap <t:${exchangeEndDate.toUnixInteger()}:R>, and drawn players will be revealed around <t:${exchangeEndDate.toUnixInteger()}:f>
     `)
 
 }
