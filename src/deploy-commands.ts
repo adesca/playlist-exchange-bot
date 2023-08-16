@@ -1,11 +1,7 @@
 import {REST, Routes} from "discord.js";
-import {StartExchangeCommand} from "./commands/start-exchange";
-import {secrets} from "./schemas";
+import {secrets} from "./config";
+import {commands} from "./commands/commands-export";
 
-
-const commands = [
-    StartExchangeCommand.command.toJSON()
-]
 
 const rest = new REST().setToken(secrets.token);
 

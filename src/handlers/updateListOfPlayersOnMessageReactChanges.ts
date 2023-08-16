@@ -12,16 +12,23 @@ export async function updateListOfPlayersOnMessageReactChanges(interaction: Mess
 
     if (isMessageUsedForTrackingAnExchange) {
 
-        const usersInExchange = interaction.users.cache
+        const usersInExchangePromises = interaction.users.cache
             .filter(usersWithReactions => !usersWithReactions.bot)
-            .map(userWithReactions => {
+            .map(async userWithReactions => {
+                const user = await interaction.message.guild!.members.fetch(userWithReactions.id)
+
                 return {
                     id: userWithReactions.id,
-                    tag: userWithReactions.tag
+                    toString: userWithReactions.toString(),
+                    serverNickname: user.nickname || userWithReactions.displayName,
+                    tag: userWithReactions.tag,
                 }
             })
 
-        exchange.players = usersInExchange
+        Promise.all(usersInExchangePromises).then(usersInExchange => {
+            exchange.players = usersInExchange
+        })
+
 
     }
 }

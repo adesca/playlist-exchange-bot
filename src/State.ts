@@ -9,7 +9,7 @@ export function getExchangeOrThrow(guildId: string) {
 }
 
 export class Exchange {
-    players: unknown[]
+    players: ExchangePlayer[]
     phase: 'initiated' | 'collecting playlists'
 
     constructor(public signupMessageId: string, public guildId: string) {
@@ -18,3 +18,10 @@ export class Exchange {
     }
 }
 
+interface ExchangePlayer {
+    tag: string,
+    id: string,
+    serverNickname: string,
+    toString: string,
+    drawnPlayerTag?: string
+}

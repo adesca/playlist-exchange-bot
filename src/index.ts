@@ -1,7 +1,7 @@
 import {Events} from "discord.js";
 import {EnhancedClient} from "./EnhancedClient";
 import {updateListOfPlayersOnMessageReactChanges} from "./handlers/updateListOfPlayersOnMessageReactChanges";
-import {secrets} from "./schemas";
+import {secrets} from "./config";
 
 const client = new EnhancedClient()
 

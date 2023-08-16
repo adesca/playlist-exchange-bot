@@ -7,14 +7,14 @@
   - (stretch) Give an id to use to look up a specific exchange using uuid-readable (https://github.com/Debdut/uuid-readable)
   - (stretch) Say the current phase and prompt user to make sure they're sure they want to progress
 - [ ] Collecting playlists
-  - exchange progress when someone messages /progress-exchange
+  - [x] exchange progress when someone messages /progress-exchange
   - (stretch) Players can send the bot a song and Bot creates a message with everyone's songs
     - Idea: people send their playlist songs to the bot? Which then updates a pinned message with all the playlist songs so far, like Collin's doc
     - Format:
       - Name, list of songs
-  - bot sends a message to all the players with their assigned person
-  - Bot messages the channel saying "Assignments sent to [x]", where x is everyone who signed up
-  - Bot says how long people have to submit songs (1 week)
+  - [x] bot sends a message to all the players with their assigned person
+  - [x] Bot messages the channel saying "Assignments sent to [x]", where x is everyone who signed up
+  - [x] Bot says how long people have to submit songs (value is configured through environment variables, but defaults to 1 week)
     - (Stretch) time is configurable
   - Bot reminds people that the exchange will end 24 hours before it ends
     - (stretch) a person can extend the exchange for another 24 hours with /extend-exchange

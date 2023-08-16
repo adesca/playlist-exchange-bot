@@ -1,6 +1,7 @@
 import {Client, Collection, IntentsBitField} from "discord.js";
 import { StartExchangeCommand,} from "./commands/start-exchange";
 import {CommandDetails} from "./commands/command-details";
+import {commandCollection} from "./commands/commands-export";
 
 export class EnhancedClient extends  Client {
     public commands = new Collection<string, CommandDetails>()
@@ -14,6 +15,8 @@ export class EnhancedClient extends  Client {
             ]
         });
 
-        this.commands.set(StartExchangeCommand.command.name, StartExchangeCommand)
+        this.commands = commandCollection
+        console.log('running with ', this.commands.size, ' commands: ', [...this.commands.keys()])
+
     }
 }
