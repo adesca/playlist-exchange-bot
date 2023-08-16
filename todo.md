@@ -25,3 +25,5 @@
   - Bot creates a playlist of the top songs
 - [ ] Deploy to render
   - See if discord keeps the app alive in the free tier
+  - support changing the loaded environment variable file through the environment
+  - add support for storing data in a database instead of in memory
