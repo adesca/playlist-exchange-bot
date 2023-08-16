@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, test} from "vitest";
-import {Exchange, signupMessageIdMappedToExchange} from "../SignupMessageIdMappedToExchange";
+import {Exchange, state} from "../State";
 import {updateListOfPlayersOnMessageReactChanges} from "./updateListOfPlayersOnMessageReactChanges";
 import {Collection, MessageReaction} from "discord.js";
 
@@ -7,8 +7,8 @@ describe('updateListOfPlayers', () => {
     let fakeExchange;
 
     beforeEach(() => {
-        fakeExchange = new Exchange("some-id")
-        signupMessageIdMappedToExchange.set("some-id", fakeExchange)
+        fakeExchange = new Exchange("some-id", "guild-id")
+        state.set("some-id", fakeExchange)
     })
 
     test('should set the players on the exchange', () => {
@@ -18,7 +18,7 @@ describe('updateListOfPlayers', () => {
         } as MessageReaction
         updateListOfPlayersOnMessageReactChanges(fakeInteraction)
 
-        expect(signupMessageIdMappedToExchange.get('some-id')?.players)
+        expect(state.get('some-id')?.players)
             .toEqual([{tag: 'fake-user'}])
     });
 
@@ -29,7 +29,7 @@ describe('updateListOfPlayers', () => {
         } as MessageReaction
         updateListOfPlayersOnMessageReactChanges(fakeInteraction)
 
-        expect(signupMessageIdMappedToExchange.get('some-id')?.players)
+        expect(state.get('some-id')?.players)
             .toEqual([])
     });
 
@@ -42,6 +42,6 @@ describe('updateListOfPlayers', () => {
 
         updateListOfPlayersOnMessageReactChanges(fakeInteraction)
 
-        expect(signupMessageIdMappedToExchange.get(fakeInteraction.message.id)).toBeUndefined()
+        expect(state.get(fakeInteraction.message.id)).toBeUndefined()
     });
 })

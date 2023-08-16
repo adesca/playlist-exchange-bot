@@ -1,21 +1,27 @@
 import {MessageReaction, PartialMessageReaction} from "discord.js";
-import {signupMessageIdMappedToExchange} from "../SignupMessageIdMappedToExchange";
+import {getExchangeOrThrow, state} from "../State";
 
 export async function updateListOfPlayersOnMessageReactChanges(interaction: MessageReaction | PartialMessageReaction) {
 
-    const isMessageUsedForTrackingAnExchange = signupMessageIdMappedToExchange.has(interaction.message.id)
+    const guildId = interaction.message.guildId
+    if (!guildId) return
+
+    const exchange = getExchangeOrThrow(guildId)
+
+    const isMessageUsedForTrackingAnExchange = exchange.signupMessageId === interaction.message.id
 
     if (isMessageUsedForTrackingAnExchange) {
 
         const usersInExchange = interaction.users.cache
             .filter(usersWithReactions => !usersWithReactions.bot)
-            .map(usersWithReactions => {
+            .map(userWithReactions => {
                 return {
-                    tag: usersWithReactions.tag
+                    id: userWithReactions.id,
+                    tag: userWithReactions.tag
                 }
             })
 
-        signupMessageIdMappedToExchange.get(interaction.message.id)!.players = usersInExchange
+        exchange.players = usersInExchange
 
     }
 }

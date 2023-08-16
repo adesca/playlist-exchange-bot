@@ -1,8 +1,6 @@
 import {Client, Collection, IntentsBitField} from "discord.js";
-import {
-    CommandDetails,
-    StartExchangeCommand,
-} from "./commands/start-exchange";
+import { StartExchangeCommand,} from "./commands/start-exchange";
+import {CommandDetails} from "./commands/command-details";
 
 export class EnhancedClient extends  Client {
     public commands = new Collection<string, CommandDetails>()

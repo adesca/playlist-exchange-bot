@@ -1,20 +1,11 @@
-import {config} from "dotenv";
-import {SecretsSchema} from "./schemas";
 import {REST, Routes} from "discord.js";
 import {StartExchangeCommand} from "./commands/start-exchange";
+import {secrets} from "./schemas";
 
-config({
-    path: './env/.env.local'
-})
-
-const secrets = SecretsSchema.parse(process.env)
 
 const commands = [
     StartExchangeCommand.command.toJSON()
-
 ]
-
-console.log(commands)
 
 const rest = new REST().setToken(secrets.token);
 

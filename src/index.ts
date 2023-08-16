@@ -1,14 +1,7 @@
-import {config} from "dotenv";
 import {Events} from "discord.js";
 import {EnhancedClient} from "./EnhancedClient";
-import {SecretsSchema} from "./schemas";
-import {signupMessageIdMappedToExchange} from "./SignupMessageIdMappedToExchange";
 import {updateListOfPlayersOnMessageReactChanges} from "./handlers/updateListOfPlayersOnMessageReactChanges";
-
-config({
-    path: './env/.env.local'
-})
-const secrets = SecretsSchema.parse(process.env)
+import {secrets} from "./schemas";
 
 const client = new EnhancedClient()
 

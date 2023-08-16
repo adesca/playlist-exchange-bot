@@ -4,13 +4,22 @@
   - There should be a time limit on being able to join the exchange (stretch)
     - the bot should ask for a time limit
     - the bot should default the time limit to 24 hours
-  - Whoever started the exchange can progress the exchange with /progress-exchange
-    - When the exchange is progressed, the bot sends a messaging tagging people with the other person 
-    in the format "[player] you have ||(not tagged)||
-  - By default the exchange ends 7 days after it starts (someone said to `/progress-exchange`)
-    - 24 hours before it ends the exchange bot will ask if anyone wants to extend it. 
-      -If they message /extend-exchange the exchange is extended by another 24 hours
-    - When the exchange ends the bot will tag people to say who their playlist was made by
-  - Idea: people send their playlist songs to the bot? Which then updates a pinned message with all the playlist songs so far, like Collin's doc
-    - Format: 
-      - Name, list of songs 
+  - (stretch) Give an id to use to look up a specific exchange using uuid-readable (https://github.com/Debdut/uuid-readable)
+  - (stretch) Say the current phase and prompt user to make sure they're sure they want to progress
+- [ ] Collecting playlists
+  - exchange progress when someone messages /progress-exchange
+  - (stretch) Players can send the bot a song and Bot creates a message with everyone's songs
+    - Idea: people send their playlist songs to the bot? Which then updates a pinned message with all the playlist songs so far, like Collin's doc
+    - Format:
+      - Name, list of songs
+  - bot sends a message to all the players with their assigned person
+  - Bot messages the channel saying "Assignments sent to [x]", where x is everyone who signed up
+  - Bot says how long people have to submit songs (1 week)
+    - (Stretch) time is configurable
+  - Bot reminds people that the exchange will end 24 hours before it ends
+    - (stretch) a person can extend the exchange for another 24 hours with /extend-exchange
+- [ ] The reveal
+  - When the exchange ends the bot will tag people to say who their playlist was made by
+- [ ] Post reveal (Stretch)
+  - Bot asks everyone for their top songs
+  - Bot creates a playlist of the top songs
