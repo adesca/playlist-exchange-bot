@@ -7,7 +7,7 @@ describe('updateListOfPlayers', () => {
     let fakeExchange;
 
     beforeEach(() => {
-        fakeExchange = new Exchange("some-id", "guild-id")
+        fakeExchange = new Exchange("some-id", "guild-id", "channel-id", "random name")
         state.set("some-id", fakeExchange)
     })
 

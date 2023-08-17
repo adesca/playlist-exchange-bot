@@ -27,6 +27,10 @@
   - Add database support
   - [x] update bot image
   - Add bot to server
-  - Add server id to places where slash commands are updated
+  - [x] Add server id to places where slash commands are updated
   - support changing the loaded environment variable file through the environment
-  - Use fanciful names for custom exchange names
+  - [x] Use fanciful names for custom exchange names
+- [ ] Beta release
+  - Users can cycle through suggested exchange names
+  - support ending an exchange early
+  - don't track reactions for ended exchanges

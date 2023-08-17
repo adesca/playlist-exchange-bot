@@ -1,6 +1,5 @@
-import {CommandDetails} from "./command-details";
 import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
-import {getExchangeOrThrow, setExchangeEndDate} from "../State";
+import {getExchangeById, getExchangeOrThrow, setExchangeEndDate} from "../State";
 import {getGuildIDOrThrow, rotateArray} from "../util";
 import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";
@@ -15,11 +14,18 @@ todo:
 const progressExchange = new SlashCommandBuilder()
     .setName("progress-exchange")
     .setDescription("Progress a currently in progress exchange")
+    .addStringOption(option =>
+        option
+            .setName("exchange-name")
+            .setDescription("The name from /start-exchange")
+            .setRequired(true))
 
 async function execute(interaction: ChatInputCommandInteraction) {
     await interaction.reply({content: 'Working on it!', ephemeral: true})
 
-    const exchange = getExchangeOrThrow(getGuildIDOrThrow(interaction))
+    const exchangeName = interaction.options.getString("exchange-name")!
+
+    const exchange = getExchangeOrThrow(exchangeName)
     exchange.phase = 'collecting playlists'
 
     const playerNicknames = exchange.players.map(player => player.serverNickname)
@@ -29,15 +35,15 @@ async function execute(interaction: ChatInputCommandInteraction) {
     for (const [index, player] of exchange.players.entries()) {
         player.drawnPlayerNickname = rotatedPlayerTags[index]
         await interaction.client.users.send(player.id,
-            `Welcome to the exchange! You drew ${player.drawnPlayerNickname} (Server nickname: ${player.serverNickname})`)
+            `Welcome to the exchange, ${exchangeName}! You drew ${player.drawnPlayerNickname} (Server nickname: ${player.serverNickname})`)
     }
 
     const exchangeLength = Duration.fromISO(configuration.exchangeLength)
     const exchangeEndDate = DateTime.now().plus(exchangeLength)
-    setExchangeEndDate(getGuildIDOrThrow(interaction), exchangeLength, exchangeEndDate)
+    setExchangeEndDate(exchangeName, exchangeLength, exchangeEndDate)
 
     const playerList = exchange.players.map(player => "- " + player.toString)
-    await interaction.channel!.send(`Assignments sent out! The following players are in the exchange: 
+    await interaction.channel!.send(`Assignments sent out! The following players are in the exchange \`${exchangeName}\`: 
     ${playerList.join('\n')}
     
     The exchange will wrap <t:${exchangeEndDate.toUnixInteger()}:R>, and drawn players will be revealed around <t:${exchangeEndDate.toUnixInteger()}:f>
@@ -45,7 +51,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
 }
 
-export const ProgressExchangeCommand: CommandDetails = {
-    command: progressExchange,
+export const ProgressExchangeCommand = {
+    command: progressExchange as SlashCommandBuilder,
     execute: execute
 }
