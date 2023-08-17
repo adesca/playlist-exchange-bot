@@ -13,6 +13,14 @@ const ConfigurationSchema = z.object({
     useInMemoryDatastore: z.boolean().default(true)
 })
 
+const DatabaseSchema = z.object({
+    databaseHost: z.string().nonempty().optional(),
+    database: z.string().nonempty().optional(),
+    user: z.string().nonempty().optional(),
+    port: z.coerce.number().optional(),
+    password: z.string().optional()
+})
+
 const environment = process.env.BOT_ENV
 config({
     path: `./env/.env.${environment}`
@@ -20,3 +28,5 @@ config({
 
 export const secrets = SecretsSchema.parse(process.env)
 export const configuration = ConfigurationSchema.parse(process.env)
+
+export const databaseDetails = DatabaseSchema.parse(process.env)

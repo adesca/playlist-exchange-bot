@@ -1,8 +1,8 @@
 import {Collection} from "discord.js";
 import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";
-import {InMemoryStore} from "./InMemoryStore";
-import {DatabaseBackedStore} from "./DatabaseBackedStore";
+import {InMemoryStore} from "./in-memory/InMemoryStore";
+import {DatabaseBackedStore} from "./database/DatabaseBackedStore";
 
 const store = configuration.useInMemoryDatastore ? new InMemoryStore() : new DatabaseBackedStore()
 

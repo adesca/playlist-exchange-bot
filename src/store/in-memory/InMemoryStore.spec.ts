@@ -1,5 +1,5 @@
 import {DateTime} from "luxon";
-import {Exchange, getAllExchangesThatHaventEnded} from "./State";
+import {Exchange, getAllExchangesThatHaventEnded} from "../State";
 import {InMemoryStore} from "./InMemoryStore";
 
 describe('getAllExchangesThatHaventEnded', () => {

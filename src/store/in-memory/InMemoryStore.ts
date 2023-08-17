@@ -1,6 +1,6 @@
 import {DateTime, Duration} from "luxon";
-import {configuration} from "../config";
-import {Exchange, ExchangePlayer} from "./State";
+import {configuration} from "../../config";
+import {Exchange, ExchangePlayer} from "../State";
 import {Collection} from "discord.js";
 
 export class InMemoryStore {
@@ -20,12 +20,24 @@ export class InMemoryStore {
             .filter(exchange => !exchange.exchangeEnded)
     }
 
-    turnOffReminderSending(guildId: string) {
-        this.state.get(guildId)!.reminderSent = true
+    turnOffReminderSending(id: string) {
+        const exchange = this.getExchangeById(id)
+        if (exchange) {
+            exchange.reminderSent = true
+            return;
+        } else {
+            throw new Error("No exchange found for id " + id)
+        }
     }
 
-    endExchange(guildId: string) {
-        this.state.get(guildId)!.exchangeEnded = true
+    endExchange(id: string) {
+        const exchange = this.getExchangeById(id)
+        if (exchange) {
+            exchange.exchangeEnded = true
+            return;
+        } else {
+            throw new Error("No exchange found for id " + id)
+        }
     }
 
     getExchangeOrThrow(exchangeId: string) {

@@ -1,7 +1,7 @@
 import {Collection} from "discord.js";
-import {Exchange, ExchangePlayer} from "./State";
+import {Exchange, ExchangePlayer} from "../State";
 import {DateTime, Duration} from "luxon";
-import {configuration} from "../config";
+import {configuration} from "../../config";
 
 export class DatabaseBackedStore {
     state = new Collection<string, Exchange>()

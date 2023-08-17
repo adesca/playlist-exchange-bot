@@ -42,7 +42,7 @@ client.on(Events.InteractionCreate, async interaction => {
 client.login(secrets.token);
 
 const handle = setInterval(checkIfAnyExchangesNeedToSendRemindersOrAreFinished,
-    Duration.fromObject({seconds: 30}).as('milliseconds'), client)
+    Duration.fromObject({seconds: 15}).as('milliseconds'), client)
 process.on('exit', () => {
     clearInterval(handle)
     console.log('exiting')

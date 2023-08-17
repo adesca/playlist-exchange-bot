@@ -34,3 +34,5 @@
   - Users can cycle through suggested exchange names
   - support ending an exchange early
   - don't track reactions for ended exchanges
+  - Remove ended exchanges automatically
+  - Users can extend an exchange if they need more time

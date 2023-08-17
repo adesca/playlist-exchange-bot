@@ -35,7 +35,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
     for (const [index, player] of exchange.players.entries()) {
         player.drawnPlayerNickname = rotatedPlayerTags[index]
         await interaction.client.users.send(player.id,
-            `Welcome to the exchange, ${exchangeName}! You drew ${player.drawnPlayerNickname} (Server nickname: ${player.serverNickname})`)
+            `Welcome to the exchange, \`${exchangeName}\`! You drew ${player.drawnPlayerNickname} (Server nickname: ${player.serverNickname})`)
     }
 
     const exchangeLength = Duration.fromISO(configuration.exchangeLength)
