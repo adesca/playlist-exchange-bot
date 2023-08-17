@@ -12,8 +12,10 @@ const ConfigurationSchema = z.object({
     remindAt: z.string().nonempty()
 })
 
+const environment = process.env.BOT_ENV
 config({
-    path: './env/.env.local'
+    path: `./env/.env.${environment}`
 })
+
 export const secrets = SecretsSchema.parse(process.env)
 export const configuration = ConfigurationSchema.parse(process.env)

@@ -28,7 +28,7 @@
   - [x] update bot image
   - Add bot to server
   - [x] Add server id to places where slash commands are updated
-  - support changing the loaded environment variable file through the environment
+  - [x] support changing the loaded environment variable file through the environment
   - [x] Use fanciful names for custom exchange names
 - [ ] Beta release
   - Users can cycle through suggested exchange names

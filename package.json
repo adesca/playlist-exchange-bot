@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node --project tsconfig.json src/index.ts",
+    "start": "BOT_ENV=local ts-node src/index.ts",
+    "start:prod": "BOT_ENV=prod ts-node src/index.ts",
     "deploy-commands": "ts-node src/deploy-commands.ts",
     "lint": "eslint ."
   },
