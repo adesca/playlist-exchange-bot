@@ -1,5 +1,5 @@
 import {generateRandomSentence} from "./dictionary-util";
-import {addNewExchange, Exchange, getExchangeById} from "../State";
+import {addNewExchange, Exchange, getExchangeById} from "../store/State";
 import {StartExchangeCommand} from "./start-exchange";
 import {ChatInputCommandInteraction} from "discord.js";
 

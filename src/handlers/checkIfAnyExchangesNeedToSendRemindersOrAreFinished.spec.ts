@@ -4,7 +4,7 @@ import {
 } from "./checkIfAnyExchangesNeedToSendRemindersOrAreFinished";
 import {beforeEach, Mock} from "vitest";
 import {DateTime} from "luxon";
-import {endExchange, Exchange, getAllExchangesThatHaventEnded, turnOffReminderSending} from "../State";
+import {endExchange, Exchange, getAllExchangesThatHaventEnded, turnOffReminderSending} from "../store/State";
 import {EnhancedClient} from "../EnhancedClient";
 
 describe('checkIfAnyExchangesNeedToSendRemindersOrAreFinished', () => {

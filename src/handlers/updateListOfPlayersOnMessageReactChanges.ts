@@ -1,5 +1,5 @@
 import {MessageReaction, PartialMessageReaction} from "discord.js";
-import {getExchangeBySignupMessageIdOrThrow, setExchangePlayers} from "../State";
+import {getExchangeBySignupMessageIdOrThrow, setExchangePlayers} from "../store/State";
 
 export async function updateListOfPlayersOnMessageReactChanges(interaction: MessageReaction | PartialMessageReaction) {
 

@@ -1,55 +1,45 @@
 import {Collection} from "discord.js";
 import {DateTime, Duration} from "luxon";
-import {configuration} from "./config";
+import {configuration} from "../config";
+import {InMemoryStore} from "./InMemoryStore";
+import {DatabaseBackedStore} from "./DatabaseBackedStore";
 
-export const state = new Collection<string, Exchange>()
+const store = configuration.useInMemoryDatastore ? new InMemoryStore() : new DatabaseBackedStore()
 
 export function getExchangeById(id: string) {
-    return state.get(id)
+    return store.getExchangeById(id)
 }
 
 export function addNewExchange(id: string, exchange: Exchange) {
-    state.set(id, exchange)
+    store.addNewExchange(id, exchange)
 }
 
 export function getAllExchangesThatHaventEnded() {
-    return [...state.values()]
-        .filter(exchange => exchange.phase !== 'initiated')
-        .filter(exchange => !exchange.exchangeEnded)
+    return store.getAllExchangesThatHaventEnded()
 }
 
 export function turnOffReminderSending(guildId: string) {
-    state.get(guildId)!.reminderSent = true
+    store.turnOffReminderSending(guildId)
 }
 
 export function endExchange(guildId: string) {
-    state.get(guildId)!.exchangeEnded = true
+    store.endExchange(guildId)
 }
 
 export function getExchangeOrThrow(exchangeId: string) {
-    const potentialExchange = state.get(exchangeId)
-    if (potentialExchange) return potentialExchange
-    throw new Error("No exchange found for server " + exchangeId)
+    return store.getExchangeOrThrow(exchangeId)
 }
 
 export function getExchangeBySignupMessageIdOrThrow(signupMessageId: string) {
-    const potentialExchange = [...state.values()]
-        .filter(exchange => exchange.signupMessageId === signupMessageId)
-        .pop()
-
-    if (potentialExchange) return potentialExchange
-    throw new Error("No open exchanges found for the reacted message ")
+    return store.getExchangeBySignupMessageIdOrThrow(signupMessageId)
 }
 
 export function setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
-    const exchange = getExchangeById(exchangeId)!
-    exchange.exchangeEndDate = exchangeEndDate.toUnixInteger()
-    exchange.exchangeReminderDate = exchangeEndDate.minus(Duration.fromISO(configuration.remindAt)).toUnixInteger()
-
+    return store.setExchangeEndDate(exchangeId, exchangeLength, exchangeEndDate)
 }
 
 export function setExchangePlayers(exchangeName: string, players: ExchangePlayer[]) {
-    state.get(exchangeName)!.players = players
+    return store.setExchangePlayers(exchangeName, players)
 }
 
 export class Exchange {
@@ -68,7 +58,7 @@ export class Exchange {
     }
 }
 
-interface ExchangePlayer {
+export interface ExchangePlayer {
     tag: string,
     id: string,
     serverNickname: string,

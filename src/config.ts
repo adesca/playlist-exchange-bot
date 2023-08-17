@@ -9,7 +9,8 @@ const SecretsSchema = z.object({
 
 const ConfigurationSchema = z.object({
     exchangeLength: z.string().nonempty(),
-    remindAt: z.string().nonempty()
+    remindAt: z.string().nonempty(),
+    useInMemoryDatastore: z.boolean().default(true)
 })
 
 const environment = process.env.BOT_ENV

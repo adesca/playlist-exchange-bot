@@ -1,5 +1,5 @@
 import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
-import {getExchangeById, getExchangeOrThrow, setExchangeEndDate} from "../State";
+import {getExchangeById, getExchangeOrThrow, setExchangeEndDate} from "../store/State";
 import {getGuildIDOrThrow, rotateArray} from "../util";
 import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";

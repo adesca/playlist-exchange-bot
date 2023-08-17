@@ -1,4 +1,4 @@
-import {endExchange, getAllExchangesThatHaventEnded, turnOffReminderSending} from "../State";
+import {endExchange, getAllExchangesThatHaventEnded, turnOffReminderSending} from "../store/State";
 import {DateTime} from "luxon";
 import {EnhancedClient} from "../EnhancedClient";
 import {Channel, TextBasedChannel} from "discord.js";
