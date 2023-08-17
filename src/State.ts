@@ -51,5 +51,5 @@ interface ExchangePlayer {
     id: string,
     serverNickname: string,
     toString: string,
-    drawnPlayerTag?: string
+    drawnPlayerNickname?: string
 }

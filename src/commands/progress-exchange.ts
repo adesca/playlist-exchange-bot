@@ -22,14 +22,14 @@ async function execute(interaction: ChatInputCommandInteraction) {
     const exchange = getExchangeOrThrow(getGuildIDOrThrow(interaction))
     exchange.phase = 'collecting playlists'
 
-    const playerTags = exchange.players.map(player => player.tag)
-    const randomRotateNumber = Math.floor(Math.random() * playerTags.length)
-    const rotatedPlayerTags = rotateArray(playerTags, randomRotateNumber)
+    const playerNicknames = exchange.players.map(player => player.serverNickname)
+    const randomRotateNumber = Math.floor(Math.random() * playerNicknames.length)
+    const rotatedPlayerTags = rotateArray(playerNicknames, randomRotateNumber)
 
     for (const [index, player] of exchange.players.entries()) {
-        player.drawnPlayerTag = rotatedPlayerTags[index]
+        player.drawnPlayerNickname = rotatedPlayerTags[index]
         await interaction.client.users.send(player.id,
-            `Welcome to the exchange! You drew ${player.drawnPlayerTag} (Server nickname: ${player.serverNickname})`)
+            `Welcome to the exchange! You drew ${player.drawnPlayerNickname} (Server nickname: ${player.serverNickname})`)
     }
 
     const exchangeLength = Duration.fromISO(configuration.exchangeLength)

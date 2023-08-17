@@ -23,7 +23,10 @@
 - [ ] Post reveal (Stretch)
   - Bot asks everyone for their top songs
   - Bot creates a playlist of the top songs
-- [ ] Deploy to render
-  - See if discord keeps the app alive in the free tier
+- [ ] Alpha release
+  - Add database support
+  - [x] update bot image
+  - Add bot to server
+  - Add server id to places where slash commands are updated
   - support changing the loaded environment variable file through the environment
-  - add support for storing data in a database instead of in memory
+  - Use fanciful names for custom exchange names

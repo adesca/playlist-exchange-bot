@@ -6,7 +6,7 @@ import {Channel, TextBasedChannel} from "discord.js";
 export async function checkIfAnyExchangesNeedToSendRemindersOrAreFinished(client: EnhancedClient) {
     const exchanges = getAllExchangesThatHaventEnded()
     const now = DateTime.now()
-    console.log(`[${now.toString()}] checking if any exchanges need reminders or are finished`)
+    console.debug(`[${now.toString()}] checking if any exchanges need reminders or are finished`)
 
     for (const exchange of exchanges) {
         if (exchange.phase === 'initiated' || !exchange.exchangeEndDate) return;
@@ -19,16 +19,17 @@ export async function checkIfAnyExchangesNeedToSendRemindersOrAreFinished(client
         // if (now.startOf('minute') == reminderDateTime.startOf('minute')) {
         // TODO add a test to cover edge case where exchange hasn't progressed
         if (!exchange.reminderSent && now > reminderDateTime) {
-            console.log('sending reminder')
+            console.debug('sending reminder')
             turnOffReminderSending(exchange.guildId)
             await playlistExchangeChannel.send(`Reminder: the exchange ends <t:${exchangeEndDateTime.toUnixInteger()}:R> `)
         }
 
         // if (now.startOf('minute') == exchangeEndDateTime.startOf('minute')) {
         if (!exchange.exchangeEnded && now > exchangeEndDateTime) {
-            console.log('exchange is over')
+            console.debug('exchange is over')
             endExchange(exchange.guildId)
-            await playlistExchangeChannel.send(`Times up!`)
+            const reveal = exchange.players.map(player => `- ${player.toString} had ${player.drawnPlayerNickname}`)
+            await playlistExchangeChannel.send(`Time for the reveal!\n` + reveal.join('\n'))
 
         }
     }
