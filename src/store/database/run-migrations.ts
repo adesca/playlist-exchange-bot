@@ -6,11 +6,11 @@ import {run} from 'sql-migrations'
 
 run({
     migrationsDir: path.resolve(__dirname, 'migrations'), // This is the directory that should contain your SQL migrations.
-    host: databaseDetails.databaseHost, // Database host
-    port: databaseDetails.port, // Database port
-    db: databaseDetails.database, // Database name
-    user: databaseDetails.user, // Database username
-    password: databaseDetails.password, // Database password
+    host: databaseDetails.PGHOST, // Database host
+    port: databaseDetails.PGPORT, // Database port
+    db: databaseDetails.PGDATABASE, // Database name
+    user: databaseDetails.PGUSER, // Database username
+    password: databaseDetails.PGPASSWORD, // Database password
     adapter: 'pg', // Database adapter: pg, mysql
 })
 

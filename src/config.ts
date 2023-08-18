@@ -10,15 +10,15 @@ const SecretsSchema = z.object({
 const ConfigurationSchema = z.object({
     exchangeLength: z.string().nonempty(),
     remindAt: z.string().nonempty(),
-    useInMemoryDatastore: z.coerce.boolean()
+    useInMemoryDatastore: z.string().nonempty().transform(val => val === 'true')
 })
 
 const DatabaseSchema = z.object({
-    databaseHost: z.string().nonempty().optional(),
-    database: z.string().nonempty().optional(),
-    user: z.string().nonempty().optional(),
-    port: z.coerce.number().optional(),
-    password: z.string().optional()
+    PGHOST: z.string().nonempty().optional(),
+    PGDATABASE: z.string().nonempty().optional(),
+    PGUSER: z.string().nonempty().optional(),
+    PGPORT: z.coerce.number().optional(),
+    PGPASSWORD: z.string().optional()
 })
 
 const environment = process.env.BOT_ENV

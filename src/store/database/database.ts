@@ -5,11 +5,11 @@ import {databaseDetails} from "../../config";
 
 const dialect = new PostgresDialect({
     pool: new Pool({
-        host: databaseDetails.databaseHost,
-        port: databaseDetails.port,
-        database: databaseDetails.database,
-        user: databaseDetails.user,
-        password: databaseDetails.password,
+        host: databaseDetails.PGHOST,
+        port: databaseDetails.PGPORT,
+        database: databaseDetails.PGDATABASE,
+        user: databaseDetails.PGUSER,
+        password: databaseDetails.PGPASSWORD,
         max: 10,
     })
 })
@@ -22,7 +22,7 @@ export const db = new Kysely<Database>({
     dialect,
     log(event) {
         if (event.level === 'query') {
-            console.log(event.query.sql, event.query.parameters)
+            // console.log(event.query.sql, event.query.parameters)
         }
     }
 })
