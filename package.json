@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest",
     "start": "BOT_ENV=local ts-node src/index.ts",
-    "start:prod": "BOT_ENV=prod yarn run-migrations-prod && BOT_ENV=prod ts-node src/index.ts",
+    "start:prod": "BOT_ENV=prod ts-node src/index.ts",
     "run-migrations-prod": "ts-node ./src/store/database/run-migrations.ts migrate",
     "deploy-commands": "BOT_ENV=local ts-node src/deploy-commands.ts",
     "create-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts create initial-migration",
