@@ -1,5 +1,5 @@
 import {generateRandomSentence} from "./dictionary-util";
-import {addNewExchange, Exchange, getExchangeById} from "../store/State";
+import {addNewExchangeWithoutPlayers, Exchange, getExchangeByNameOrUndefined} from "../store/State";
 import {StartExchangeCommand} from "./start-exchange";
 import {ChatInputCommandInteraction} from "discord.js";
 
@@ -9,7 +9,7 @@ describe('startExchangeCommandExecute', () => {
     }))
 
     vi.mock('../State', async () => {
-        const actual = await vi.importActual('../State') as Record<string, any>
+        const actual = await vi.importActual('../State') as Record<string, unknown>
 
         return {
             ...actual,
@@ -20,14 +20,17 @@ describe('startExchangeCommandExecute', () => {
 
     it('should generate a new random name for the exchange if a name is taken',async () => {
         const mockedGenerateRandomSentence = vi.mocked(generateRandomSentence)
-        const mockedGetExchangeById = vi.mocked(getExchangeById)
-        const mockedAddExchange = vi.mocked(addNewExchange)
+        const mockedGetExchangeById = vi.mocked(getExchangeByNameOrUndefined)
+        const mockedAddExchange = vi.mocked(addNewExchangeWithoutPlayers)
 
         mockedGenerateRandomSentence
             .mockReturnValueOnce("already exists")
             .mockReturnValueOnce("does not exist")
         mockedGetExchangeById.mockImplementation(id => {
-            if (id === 'already exists') return {} as Exchange
+            let retval = undefined;
+            if (id === 'already exists') retval = {} as Exchange
+
+            return Promise.resolve(retval)
         })
 
         const fakeInteraction = generateFakeInteraction()

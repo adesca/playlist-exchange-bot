@@ -6,10 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "BOT_ENV=local ts-node src/index.ts",
-    "start:prod": "BOT_ENV=prod ts-node src/index.ts",
-    "deploy-commands": "ts-node src/deploy-commands.ts",
-    "create-migrations": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts create initial-migration",
-    "run-migrations": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts migrate",
+    "start:prod": "yarn run-migrations && BOT_ENV=prod ts-node src/index.ts",
+    "deploy-commands": "BOT_ENV=local ts-node src/deploy-commands.ts",
+    "create-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts create initial-migration",
+    "run-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts migrate",
+    "rollback-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts rollback",
     "lint": "eslint ."
   },
   "keywords": [],

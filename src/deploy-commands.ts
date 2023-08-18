@@ -15,6 +15,11 @@ const rest = new REST().setToken(secrets.token);
             { body: commands },
         ) as unknown[];
 
+       await rest.put(
+            Routes.applicationGuildCommands(secrets.clientId, "888135710245289984"),
+            { body: commands },
+        ) as unknown[];
+
 
         console.log(`Successfully reloaded ${data.length} application (/) commands.`);
     } catch (error) {

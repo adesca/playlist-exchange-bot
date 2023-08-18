@@ -3,10 +3,7 @@ import {getExchangeBySignupMessageIdOrThrow, setExchangePlayers} from "../store/
 
 export async function updateListOfPlayersOnMessageReactChanges(interaction: MessageReaction | PartialMessageReaction) {
 
-    const guildId = interaction.message.guildId
-    if (!guildId) return
-
-    const exchange = getExchangeBySignupMessageIdOrThrow(interaction.message.id)
+    const exchange = await getExchangeBySignupMessageIdOrThrow(interaction.message.id)
 
     const usersInExchangePromises = interaction.users.cache
         .filter(usersWithReactions => !usersWithReactions.bot)
@@ -14,7 +11,7 @@ export async function updateListOfPlayersOnMessageReactChanges(interaction: Mess
             const user = await interaction.message.guild!.members.fetch(userWithReactions.id)
 
             return {
-                id: userWithReactions.id,
+                discordId: userWithReactions.id,
                 toString: userWithReactions.toString(),
                 serverNickname: user.nickname || userWithReactions.displayName,
                 tag: userWithReactions.tag,

@@ -10,7 +10,7 @@ const SecretsSchema = z.object({
 const ConfigurationSchema = z.object({
     exchangeLength: z.string().nonempty(),
     remindAt: z.string().nonempty(),
-    useInMemoryDatastore: z.boolean().default(true)
+    useInMemoryDatastore: z.coerce.boolean()
 })
 
 const DatabaseSchema = z.object({
@@ -26,7 +26,9 @@ config({
     path: `./env/.env.${environment}`
 })
 
+
 export const secrets = SecretsSchema.parse(process.env)
 export const configuration = ConfigurationSchema.parse(process.env)
 
+console.log('using in memory data store? ', configuration.useInMemoryDatastore)
 export const databaseDetails = DatabaseSchema.parse(process.env)

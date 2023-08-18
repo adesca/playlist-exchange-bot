@@ -1,6 +1,6 @@
 import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
-import {getExchangeById, getExchangeOrThrow, setExchangeEndDate} from "../store/State";
-import {getGuildIDOrThrow, rotateArray} from "../util";
+import {getExchangeOrThrow, progressExchangeOrThrow, setExchangeEndDate, setExchangePlayers} from "../store/State";
+import {rotateArray} from "../util";
 import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";
 
@@ -25,8 +25,8 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
     const exchangeName = interaction.options.getString("exchange-name")!
 
-    const exchange = getExchangeOrThrow(exchangeName)
-    exchange.phase = 'collecting playlists'
+    const exchange = await getExchangeOrThrow(exchangeName)
+    await progressExchangeOrThrow(exchangeName, 'collecting playlists')
 
     const playerNicknames = exchange.players.map(player => player.serverNickname)
     const randomRotateNumber = Math.floor(Math.random() * playerNicknames.length)
@@ -34,13 +34,15 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
     for (const [index, player] of exchange.players.entries()) {
         player.drawnPlayerNickname = rotatedPlayerTags[index]
-        await interaction.client.users.send(player.id,
+        await interaction.client.users.send(player.discordId,
             `Welcome to the exchange, \`${exchangeName}\`! You drew ${player.drawnPlayerNickname} (Server nickname: ${player.serverNickname})`)
     }
 
+    await setExchangePlayers(exchangeName, exchange.players)
+
     const exchangeLength = Duration.fromISO(configuration.exchangeLength)
     const exchangeEndDate = DateTime.now().plus(exchangeLength)
-    setExchangeEndDate(exchangeName, exchangeLength, exchangeEndDate)
+    await setExchangeEndDate(exchangeName, exchangeLength, exchangeEndDate)
 
     const playerList = exchange.players.map(player => "- " + player.toString)
     await interaction.channel!.send(`Assignments sent out! The following players are in the exchange \`${exchangeName}\`: 

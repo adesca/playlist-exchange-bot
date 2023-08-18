@@ -1,4 +1,3 @@
-import {Collection} from "discord.js";
 import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";
 import {InMemoryStore} from "./in-memory/InMemoryStore";
@@ -6,47 +5,51 @@ import {DatabaseBackedStore} from "./database/DatabaseBackedStore";
 
 const store = configuration.useInMemoryDatastore ? new InMemoryStore() : new DatabaseBackedStore()
 
-export function getExchangeById(id: string) {
-    return store.getExchangeById(id)
+export async function getExchangeByNameOrUndefined(id: string): Promise<Exchange | undefined> {
+    return store.getExchangeByNameOrUndefined(id)
 }
 
-export function addNewExchange(id: string, exchange: Exchange) {
-    store.addNewExchange(id, exchange)
+export async function addNewExchangeWithoutPlayers(id: string, exchange: Exchange) {
+    await store.addNewExchangeWithoutPlayers(id, exchange)
 }
 
-export function getAllExchangesThatHaventEnded() {
-    return store.getAllExchangesThatHaventEnded()
+export async function getAllExchangesThatHaventEnded(): Promise<Exchange[]> {
+    return store.getAllExchangesThatHaventEnded();
 }
 
-export function turnOffReminderSending(guildId: string) {
-    store.turnOffReminderSending(guildId)
+export async function turnOffReminderSending(exchangeName: string) {
+    await store.turnOffReminderSending(exchangeName)
 }
 
-export function endExchange(guildId: string) {
-    store.endExchange(guildId)
+export async function endExchange(guildId: string) {
+    await store.endExchange(guildId)
 }
 
-export function getExchangeOrThrow(exchangeId: string) {
+export async function getExchangeOrThrow(exchangeId: string) {
     return store.getExchangeOrThrow(exchangeId)
 }
 
-export function getExchangeBySignupMessageIdOrThrow(signupMessageId: string) {
+export async function progressExchangeOrThrow(exchangeName:string, newPhase: 'collecting playlists') {
+    return store.progressExchangeOrThrow(exchangeName, newPhase)
+}
+
+export async function getExchangeBySignupMessageIdOrThrow(signupMessageId: string) {
     return store.getExchangeBySignupMessageIdOrThrow(signupMessageId)
 }
 
-export function setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
+export async function setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
     return store.setExchangeEndDate(exchangeId, exchangeLength, exchangeEndDate)
 }
 
-export function setExchangePlayers(exchangeName: string, players: ExchangePlayer[]) {
+export async function setExchangePlayers(exchangeName: string, players: ExchangePlayer[]) {
     return store.setExchangePlayers(exchangeName, players)
 }
 
 export class Exchange {
     players: ExchangePlayer[]
     phase: 'initiated' | 'collecting playlists'
-    public exchangeEndDate: number = 0;
-    public exchangeReminderDate: number = 0;
+    public exchangeEndDate = DateTime.fromSeconds(0);
+    public exchangeReminderDate = DateTime.fromSeconds(0);
 
     public reminderSent = false;
     public exchangeEnded = false;
@@ -60,7 +63,7 @@ export class Exchange {
 
 export interface ExchangePlayer {
     tag: string,
-    id: string,
+    discordId: string,
     serverNickname: string,
     toString: string,
     drawnPlayerNickname?: string

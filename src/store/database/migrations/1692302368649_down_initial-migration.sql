@@ -1,1 +1,1 @@
-DROP TABLE exchange, player;
+DROP TABLE exchanges, players;

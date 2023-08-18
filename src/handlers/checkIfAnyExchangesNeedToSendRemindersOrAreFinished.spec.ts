@@ -34,7 +34,7 @@ describe('checkIfAnyExchangesNeedToSendRemindersOrAreFinished', () => {
             exchange.guildId = 'guild-id'
             exchange.reminderSent = false
             exchange.exchangeReminderDate = DateTime.fromObject({year: 2021}).toUnixInteger()
-            getExchangesMock.mockReturnValueOnce([exchange])
+            getExchangesMock.mockResolvedValueOnce([exchange])
 
             checkIfAnyExchangesNeedToSendRemindersOrAreFinished(fakeClient as unknown as EnhancedClient)
 
@@ -52,7 +52,7 @@ describe('checkIfAnyExchangesNeedToSendRemindersOrAreFinished', () => {
             const exchangeEndDate = DateTime.fromObject({year: 2023, month: 8, day: 16, hour: 14, minute: 38,})
 
             const getExchangesMock = vi.mocked(getAllExchangesThatHaventEnded)
-            getExchangesMock.mockReturnValue([{
+            getExchangesMock.mockResolvedValue([{
                 channelId: 'channel-id',
                 exchangeReminderDate: DateTime.fromObject({year: 2023, month: 8, day: 16, hour: 14, minute: 25,}).toUnixInteger(),
                 exchangeEndDate: exchangeEndDate.toUnixInteger(),
@@ -72,7 +72,7 @@ describe('checkIfAnyExchangesNeedToSendRemindersOrAreFinished', () => {
                 }))
 
             const getExchangesMock = vi.mocked(getAllExchangesThatHaventEnded)
-            getExchangesMock.mockReturnValue([{
+            getExchangesMock.mockResolvedValue([{
                 exchangeReminderDate: DateTime.fromObject({year: 2023, month: 8, day: 16, hour: 14, minute: 25}).toUnixInteger(),
                 reminderSent: false,
 
@@ -98,7 +98,7 @@ describe('checkIfAnyExchangesNeedToSendRemindersOrAreFinished', () => {
             exchange.guildId = "ended-exchange"
             exchange.exchangeEnded = false
             exchange.exchangeEndDate = DateTime.fromObject({year: 2022}).toUnixInteger()
-            getExchangesMock.mockReturnValue([exchange])
+            getExchangesMock.mockResolvedValue([exchange])
 
 
             checkIfAnyExchangesNeedToSendRemindersOrAreFinished(fakeClient as unknown as EnhancedClient)
@@ -115,7 +115,7 @@ describe('checkIfAnyExchangesNeedToSendRemindersOrAreFinished', () => {
             const exchange = createGenericExchange()
             exchange.exchangeEnded = true
             exchange.exchangeEndDate = DateTime.fromObject({year: 2022}).toUnixInteger()
-            getExchangesMock.mockReturnValue([exchange])
+            getExchangesMock.mockResolvedValue([exchange])
 
 
             checkIfAnyExchangesNeedToSendRemindersOrAreFinished(fakeClient as unknown as EnhancedClient)
@@ -131,7 +131,7 @@ describe('checkIfAnyExchangesNeedToSendRemindersOrAreFinished', () => {
             const exchange = createGenericExchange()
             exchange.exchangeEnded = false
             exchange.exchangeEndDate = DateTime.fromObject({year: 2024}).toUnixInteger()
-            getExchangesMock.mockReturnValue([exchange])
+            getExchangesMock.mockResolvedValue([exchange])
 
 
             checkIfAnyExchangesNeedToSendRemindersOrAreFinished(fakeClient as unknown as EnhancedClient)

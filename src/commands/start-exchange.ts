@@ -1,5 +1,5 @@
 import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
-import {addNewExchange, Exchange, getExchangeById} from "../store/State";
+import {addNewExchangeWithoutPlayers, Exchange, getExchangeByNameOrUndefined} from "../store/State";
 import {CommandDetails} from "./command-details";
 import {generateRandomSentence} from "./dictionary-util";
 
@@ -14,19 +14,25 @@ const startExchangeCommandExecute = async function (interaction: ChatInputComman
 
     const guildId = interaction.guildId
     if (guildId) {
-        let randomExchangeName = generateRandomSentence()
-        for (let i=0; i< 15; i++) {
-            if (getExchangeById(randomExchangeName) == undefined) break
+        try {
 
-            randomExchangeName = generateRandomSentence()
-        }
+            let randomExchangeName = generateRandomSentence()
+            for (let i = 0; i < 15; i++) {
+                if (await getExchangeByNameOrUndefined(randomExchangeName) == undefined) break
 
-        const followupMessage = await interaction.followUp(`${interaction.user.toString()} started the playlist exchange \`${randomExchangeName}\`. Who's in?
+                randomExchangeName = generateRandomSentence()
+            }
+
+            const followupMessage = await interaction.followUp(`${interaction.user.toString()} started the playlist exchange \`${randomExchangeName}\`. Who's in?
      React with :notes: if you are!`)
 
-        addNewExchange(randomExchangeName, new Exchange(followupMessage.id, guildId, interaction.channelId, randomExchangeName))
+            await addNewExchangeWithoutPlayers(randomExchangeName, new Exchange(followupMessage.id, guildId, interaction.channelId, randomExchangeName))
 
-        await followupMessage.react('🎶')
+            await followupMessage.react('🎶')
+
+        } catch (e) {
+            console.log('caught it ', e)
+        }
     } else {
         await interaction.reply({content: `You don't seem to be in a discord server`, ephemeral: true})
     }

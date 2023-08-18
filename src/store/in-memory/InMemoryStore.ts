@@ -6,11 +6,15 @@ import {Collection} from "discord.js";
 export class InMemoryStore {
     public state = new Collection<string, Exchange>()
 
-    getExchangeById(id: string) {
-        return this.state.get(id)
+    progressExchangeOrThrow(name: string, newPhase: 'collecting playlists') {
+        this.getExchangeOrThrow(name).phase = newPhase
     }
 
-    addNewExchange(id: string, exchange: Exchange) {
+    getExchangeByNameOrUndefined(name: string) {
+        return this.state.get(name)
+    }
+
+    addNewExchangeWithoutPlayers(id: string, exchange: Exchange) {
         this.state.set(id, exchange)
     }
 
@@ -21,7 +25,7 @@ export class InMemoryStore {
     }
 
     turnOffReminderSending(id: string) {
-        const exchange = this.getExchangeById(id)
+        const exchange = this.getExchangeByNameOrUndefined(id)
         if (exchange) {
             exchange.reminderSent = true
             return;
@@ -31,7 +35,7 @@ export class InMemoryStore {
     }
 
     endExchange(id: string) {
-        const exchange = this.getExchangeById(id)
+        const exchange =  this.getExchangeByNameOrUndefined(id)
         if (exchange) {
             exchange.exchangeEnded = true
             return;
@@ -55,10 +59,14 @@ export class InMemoryStore {
         throw new Error("No open exchanges found for the reacted message ")
     }
 
-    setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
-        const exchange = this.getExchangeById(exchangeId)!
-        exchange.exchangeEndDate = exchangeEndDate.toUnixInteger()
-        exchange.exchangeReminderDate = exchangeEndDate.minus(Duration.fromISO(configuration.remindAt)).toUnixInteger()
+     setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
+        const exchange =  this.getExchangeByNameOrUndefined(exchangeId)
+         if (exchange) {
+            exchange.exchangeEndDate = exchangeEndDate
+            exchange.exchangeReminderDate = exchangeEndDate.minus(Duration.fromISO(configuration.remindAt))
+         } else {
+             throw new Error("No exchange was found with id " + exchangeId)
+         }
 
     }
 

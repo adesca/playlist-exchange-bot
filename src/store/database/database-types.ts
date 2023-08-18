@@ -1,23 +1,23 @@
 import {Generated, Insertable, Selectable, Updateable} from "kysely";
 
 export interface Database {
-    exchange: ExchangeTable,
-    player: PlayerTable
+    exchanges: ExchangeTable,
+    players: PlayerTable
 }
 
 interface ExchangeTable {
     id: Generated<string>
     phase: 'initiated' | 'collecting playlists'
-    exchangeEndDate: Date | null
-    exchangeReminderDate: Date | null
+    exchange_end_date: Date | null
+    exchange_reminder_date: Date | null
 
-    reminderSent: boolean | null
-    exchangeEnded: boolean | null
+    reminder_sent: boolean | null
+    exchange_ended: boolean | null
 
-    signupMessageId: string,
-    guildId: string,
-    channelId: string,
-    exchangeName: string
+    signup_message_id: string,
+    guild_id: string,
+    channel_id: string,
+    exchange_name: string
 }
 
 export type QueriedExchange = Selectable<ExchangeTable>
@@ -26,9 +26,12 @@ export type ExchangeUpdate = Updateable<ExchangeTable>
 export interface PlayerTable {
     tag: string,
     id: Generated<string>,
-    serverNickname: string,
-    toString: string,
-    drawnPlayerNickname: string | null
+    server_nickname: string,
+    discord_id: string,
+    to_string: string,
+    drawn_player_nickname: string | null,
+
+    exchange_id: string
 }
 
 export type QueriedPlayer = Selectable<PlayerTable>
