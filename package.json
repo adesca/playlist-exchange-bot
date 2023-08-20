@@ -9,7 +9,7 @@
     "start:prod": "BOT_ENV=prod ts-node src/index.ts",
     "run-migrations-prod": "ts-node ./src/store/database/run-migrations.ts migrate",
     "deploy-commands": "BOT_ENV=local ts-node src/deploy-commands.ts",
-    "create-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts create initial-migration",
+    "create-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts create add-exchange-name-column-to-players",
     "run-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts migrate",
     "rollback-migrations-locally": "BOT_ENV=local ts-node ./src/store/database/run-migrations.ts rollback",
     "lint": "eslint ."

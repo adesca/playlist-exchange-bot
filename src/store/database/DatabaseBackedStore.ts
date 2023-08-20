@@ -3,8 +3,13 @@ import {DateTime, Duration} from "luxon";
 import {db} from "./database";
 import {NewExchange, NewPlayer, QueriedExchange} from "./database-types";
 import {configuration} from "../../config";
+import {PlayerRepository} from "./PlayerRepository";
+import {ExchangeRepository} from "./ExchangeRepository";
 
 export class DatabaseBackedStore {
+    playerRepository = new PlayerRepository();
+    exchangeRepository = new ExchangeRepository()
+
     async convertExchangeEntityToExchange(exchangeEntity: QueriedExchange) {
         const exchange = new Exchange(exchangeEntity.signup_message_id, exchangeEntity.guild_id,
             exchangeEntity.channel_id, exchangeEntity.exchange_name)
@@ -22,7 +27,7 @@ export class DatabaseBackedStore {
             exchange.exchangeEndDate = DateTime.fromJSDate(exchangeEntity.exchange_end_date)
         }
 
-        const relatedPlayers = await this.getPlayersForExchange(exchangeEntity.id)
+        const relatedPlayers = await this.playerRepository.getPlayersForExchange(exchangeEntity.exchange_name)
 
         exchange.players = relatedPlayers.map(playerEntity => ({
             tag: playerEntity.tag,
@@ -33,29 +38,6 @@ export class DatabaseBackedStore {
         }))
 
         return exchange;
-    }
-
-    private async getPlayersForExchange(exchangeId: string) {
-        return await db.selectFrom('players')
-            .selectAll()
-            .where('exchange_id', '=', exchangeId)
-            .execute()
-    }
-
-    private async getExchangeEntityByName(name: string) {
-        return await db
-            .selectFrom('exchanges')
-            .selectAll()
-            .where('exchange_name', '=', name)
-            .executeTakeFirst()
-    }
-
-    async getExchangeByNameOrUndefined(name: string) {
-        const exchange = await this.getExchangeEntityByName(name)
-
-        if (!exchange) return undefined
-
-        return this.convertExchangeEntityToExchange(exchange)
     }
 
     async addNewExchangeWithoutPlayers(exchangeName: string, exchange: Exchange) {
@@ -117,19 +99,8 @@ export class DatabaseBackedStore {
             .executeTakeFirstOrThrow()
     }
 
-    async getExchangeOrThrow(exchangeName: string) {
-        const potentialExchange = await this.getExchangeByNameOrUndefined(exchangeName)
-        if (potentialExchange) return potentialExchange
-        throw new Error("No exchange found for exchange name " + exchangeName)
-    }
-
     async getExchangeBySignupMessageIdOrThrow(signupMessageId: string) {
-        const exchange = await db
-            .selectFrom('exchanges')
-            .selectAll()
-            .where('signup_message_id', '=', signupMessageId)
-            .executeTakeFirstOrThrow(() => new Error("No open exchanges found for the reacted message "))
-
+        const exchange = await this.exchangeRepository.getExchangeBySignupMessageIdOrThrow(signupMessageId)
         return this.convertExchangeEntityToExchange(exchange)
     }
 
@@ -144,10 +115,10 @@ export class DatabaseBackedStore {
     }
 
     async setExchangePlayers(exchangeName: string, players: ExchangePlayer[]) {
-        const exchangeEntity = await this.getExchangeEntityByName(exchangeName)
+        const exchangeEntity = await this.exchangeRepository.getExchangeOrThrow(exchangeName)
         if (!exchangeEntity) throw new Error("No exchange found with exchange name " + exchangeName)
 
-        const existingPlayers = await this.getPlayersForExchange(exchangeEntity.id)
+        const existingPlayers = await this.playerRepository.getPlayersForExchange(exchangeName)
         for (const existingPlayer of existingPlayers) {
             await db.deleteFrom('players')
                 .where('players.id', '=', existingPlayer.id)
@@ -161,15 +132,12 @@ export class DatabaseBackedStore {
                 discord_id: player.discordId,
                 to_string: player.toString,
                 drawn_player_nickname: player.drawnPlayerNickname,
-                exchange_id: exchangeEntity.id
+                exchange_id: exchangeEntity.id,
+                exchange_name: exchangeName
             }
         })
 
-        if (newPlayers.length > 0) {
-            await db.insertInto('players')
-                .values(newPlayers)
-                .executeTakeFirstOrThrow()
-        }
+       await this.playerRepository.insertPlayers(newPlayers)
 
     }
 }

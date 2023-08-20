@@ -32,6 +32,7 @@ export interface PlayerTable {
     drawn_player_nickname: string | null,
 
     exchange_id: string
+    exchange_name: string
 }
 
 export type QueriedPlayer = Selectable<PlayerTable>
