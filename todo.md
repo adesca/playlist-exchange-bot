@@ -23,13 +23,17 @@
 - [ ] Post reveal (Stretch)
   - Bot asks everyone for their top songs
   - Bot creates a playlist of the top songs
-- [ ] Alpha release
+- [x] Alpha release
   - Add database support
   - [x] update bot image
   - Add bot to server
   - [x] Add server id to places where slash commands are updated
   - [x] support changing the loaded environment variable file through the environment
   - [x] Use fanciful names for custom exchange names
+- [ ] Alpha bugs
+  - Didn't include jeff in the list of assigned players, but did include the bot
+  - Mixed up a person's discord handle with the nickname of another person (colin with the bot)
+    - I should remove the "server nickname" bit since we can't seem to get their actual id anyway
 - [ ] Beta release
   - Users can cycle through suggested exchange names
   - support ending an exchange early
