@@ -2,30 +2,31 @@ import {DateTime, Duration} from "luxon";
 import {configuration} from "../../config";
 import {Exchange, ExchangePlayer} from "../State";
 import {Collection} from "discord.js";
+import {Store} from "../StoreInterface";
 
-export class InMemoryStore {
+export class InMemoryStore implements Store {
     public state = new Collection<string, Exchange>()
 
-    progressExchangeOrThrow(name: string, newPhase: 'collecting playlists') {
-        this.getExchangeOrThrow(name).phase = newPhase
+    async progressExchangeOrThrow(name: string, newPhase: 'collecting playlists') {
+        (await this.getExchangeOrThrow(name)).phase = newPhase
     }
 
-    getExchangeByNameOrUndefined(name: string) {
+    async getExchangeByNameOrUndefined(name: string) {
         return this.state.get(name)
     }
 
-    addNewExchangeWithoutPlayers(id: string, exchange: Exchange) {
+    async addNewExchangeWithoutPlayers(id: string, exchange: Exchange) {
         this.state.set(id, exchange)
     }
 
-    getAllExchangesThatHaventEnded() {
+    async getAllExchangesThatHaventEnded() {
         return [...this.state.values()]
             .filter(exchange => exchange.phase !== 'initiated')
             .filter(exchange => !exchange.exchangeEnded)
     }
 
-    turnOffReminderSending(id: string) {
-        const exchange = this.getExchangeByNameOrUndefined(id)
+    async turnOffReminderSending(id: string) {
+        const exchange = await this.getExchangeByNameOrUndefined(id)
         if (exchange) {
             exchange.reminderSent = true
             return;
@@ -34,8 +35,8 @@ export class InMemoryStore {
         }
     }
 
-    endExchange(id: string) {
-        const exchange =  this.getExchangeByNameOrUndefined(id)
+    async endExchange(id: string) {
+        const exchange =  await this.getExchangeByNameOrUndefined(id)
         if (exchange) {
             exchange.exchangeEnded = true
             return;
@@ -44,13 +45,13 @@ export class InMemoryStore {
         }
     }
 
-    getExchangeOrThrow(exchangeId: string) {
+    async getExchangeOrThrow(exchangeId: string) {
         const potentialExchange = this.state.get(exchangeId)
         if (potentialExchange) return potentialExchange
         throw new Error("No exchange found for server " + exchangeId)
     }
 
-    getExchangeBySignupMessageIdOrThrow(signupMessageId: string) {
+    async getExchangeBySignupMessageIdOrThrow(signupMessageId: string) {
         const potentialExchange = [...this.state.values()]
             .filter(exchange => exchange.signupMessageId === signupMessageId)
             .pop()
@@ -59,8 +60,8 @@ export class InMemoryStore {
         throw new Error("No open exchanges found for the reacted message ")
     }
 
-     setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
-        const exchange =  this.getExchangeByNameOrUndefined(exchangeId)
+     async setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
+        const exchange =  await this.getExchangeByNameOrUndefined(exchangeId)
          if (exchange) {
             exchange.exchangeEndDate = exchangeEndDate
             exchange.exchangeReminderDate = exchangeEndDate.minus(Duration.fromISO(configuration.remindAt))
@@ -70,7 +71,11 @@ export class InMemoryStore {
 
     }
 
-    setExchangePlayers(exchangeName: string, players: ExchangePlayer[]) {
+    async setExchangePlayers(exchangeName: string, players: ExchangePlayer[]) {
         this.state.get(exchangeName)!.players = players
+    }
+
+    async getExchangeByNameOrThrow(exchangeName: string): Promise<Exchange> {
+        return this.getExchangeOrThrow(exchangeName)
     }
 }

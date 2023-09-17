@@ -1,5 +1,10 @@
 import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
-import {getExchangeOrThrow, progressExchangeOrThrow, setExchangeEndDate, setExchangePlayers} from "../store/State";
+import {
+    getExchangeByNameOrThrow,
+    progressExchangeOrThrow,
+    setExchangeEndDate,
+    setExchangePlayers
+} from "../store/State";
 import {rotateArray} from "../util";
 import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";
@@ -25,17 +30,17 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
     const exchangeName = interaction.options.getString("exchange-name")!
 
-    const exchange = await getExchangeOrThrow(exchangeName)
+    const exchange = await getExchangeByNameOrThrow(exchangeName)
     await progressExchangeOrThrow(exchangeName, 'collecting playlists')
 
-    const playerNicknames = exchange.players.map(player => player.serverNickname)
-    const randomRotateNumber = Math.floor(Math.random() * playerNicknames.length)
-    const rotatedPlayerTags = rotateArray(playerNicknames, randomRotateNumber)
+    const randomRotateNumber = Math.floor(Math.random() * exchange.players.length)
+    const rotatedPlayers = rotateArray(exchange.players, randomRotateNumber)
 
     for (const [index, player] of exchange.players.entries()) {
-        player.drawnPlayerNickname = rotatedPlayerTags[index]
+        const drawnPlayer = rotatedPlayers[index]
+        player.drawnPlayerNickname = drawnPlayer.serverNickname
         await interaction.client.users.send(player.discordId,
-            `Welcome to the exchange \`${exchangeName}\`! You drew ${player.drawnPlayerNickname} (Server nickname: ${player.serverNickname})`)
+            `Welcome to the exchange \`${exchangeName}\`! You drew ${player.drawnPlayerNickname} (Discord tag: ${drawnPlayer.tag})`)
     }
 
     await setExchangePlayers(exchangeName, exchange.players)

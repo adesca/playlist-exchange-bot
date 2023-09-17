@@ -17,7 +17,7 @@ export class ExchangeRepository {
 
     }
 
-    private async getExchangeEntityByExchangeName(name: string) {
+    async getExchangeEntityByExchangeName(name: string) {
         return await db
             .selectFrom('exchanges')
             .selectAll()

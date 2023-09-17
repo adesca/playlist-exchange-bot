@@ -2,8 +2,9 @@ import {DateTime, Duration} from "luxon";
 import {configuration} from "../config";
 import {InMemoryStore} from "./in-memory/InMemoryStore";
 import {DatabaseBackedStore} from "./database/DatabaseBackedStore";
+import {Store} from "./StoreInterface";
 
-const store = configuration.useInMemoryDatastore ? new InMemoryStore() : new DatabaseBackedStore()
+const store: Store = configuration.useInMemoryDatastore ? new InMemoryStore() : new DatabaseBackedStore()
 
 export async function getExchangeByNameOrUndefined(id: string): Promise<Exchange | undefined> {
     return store.getExchangeByNameOrUndefined(id)
@@ -25,8 +26,8 @@ export async function endExchange(guildId: string) {
     await store.endExchange(guildId)
 }
 
-export async function getExchangeOrThrow(exchangeId: string) {
-    return store.getExchangeOrThrow(exchangeId)
+export async function getExchangeByNameOrThrow(exchangeId: string) {
+    return store.getExchangeByNameOrThrow(exchangeId)
 }
 
 export async function progressExchangeOrThrow(exchangeName:string, newPhase: 'collecting playlists') {

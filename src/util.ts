@@ -6,7 +6,7 @@ export function getGuildIDOrThrow(interaction: ChatInputCommandInteraction) {
     throw new Error("No guild ID was associated with this interaction")
 }
 
-export function rotateArray(arr: string[], count: number) {
+export function rotateArray<T>(arr: T[], count: number) {
     if (count == arr.length || count == 0) {
         count = 1
     }

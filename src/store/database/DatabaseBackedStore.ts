@@ -5,10 +5,22 @@ import {NewExchange, NewPlayer, QueriedExchange} from "./database-types";
 import {configuration} from "../../config";
 import {PlayerRepository} from "./PlayerRepository";
 import {ExchangeRepository} from "./ExchangeRepository";
+import {Store} from "../StoreInterface";
 
-export class DatabaseBackedStore {
+export class DatabaseBackedStore implements Store {
     playerRepository = new PlayerRepository();
     exchangeRepository = new ExchangeRepository()
+    async getExchangeByNameOrThrow(exchangeName: string) {
+        const queriedExchange = await this.exchangeRepository.getExchangeOrThrow(exchangeName)
+        return this.convertExchangeEntityToExchange(queriedExchange);
+    }
+
+    async getExchangeByNameOrUndefined(exchangeName: string): Promise<Exchange | undefined> {
+        const queriedExchange = await this.exchangeRepository.getExchangeEntityByExchangeName(exchangeName)
+
+        if (queriedExchange) return this.convertExchangeEntityToExchange(queriedExchange);
+        return Promise.resolve(undefined);
+    }
 
     async convertExchangeEntityToExchange(exchangeEntity: QueriedExchange) {
         const exchange = new Exchange(exchangeEntity.signup_message_id, exchangeEntity.guild_id,
