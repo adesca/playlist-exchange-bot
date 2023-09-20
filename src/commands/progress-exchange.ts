@@ -34,9 +34,12 @@ async function execute(interaction: ChatInputCommandInteraction) {
     await progressExchangeOrThrow(exchangeName, 'collecting playlists')
 
     const randomRotateNumber = Math.floor(Math.random() * exchange.players.length)
-    const rotatedPlayers = rotateArray(exchange.players, randomRotateNumber)
+    console.log('random rotate number ', randomRotateNumber)
+    const sortedPlayers = exchange.players.sort((a,b) => a.toString.localeCompare(b.toString) )
+    console.log('sorting by discord toString to add a little more randomness ', sortedPlayers)
+    const rotatedPlayers = rotateArray(sortedPlayers, randomRotateNumber)
 
-    for (const [index, player] of exchange.players.entries()) {
+    for (const [index, player] of sortedPlayers.entries()) {
         const drawnPlayer = rotatedPlayers[index]
         player.drawnPlayerNickname = drawnPlayer.serverNickname
         await interaction.client.users.send(player.discordId,
@@ -49,7 +52,9 @@ async function execute(interaction: ChatInputCommandInteraction) {
     const exchangeEndDate = DateTime.now().plus(exchangeLength)
     await setExchangeEndDate(exchangeName, exchangeLength, exchangeEndDate)
 
-    const playerList = exchange.players.map(player => "- " + player.toString)
+    const playerList = exchange.players
+        .sort((a,b) => a.serverNickname.localeCompare(b.serverNickname))
+        .map(player => "- " + player.toString)
     await interaction.channel!.send(`Assignments sent out! The following players are in the exchange \`${exchangeName}\`: 
     ${playerList.join('\n')}
     
