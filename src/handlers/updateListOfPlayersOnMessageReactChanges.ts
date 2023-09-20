@@ -3,6 +3,7 @@ import {getExchangeBySignupMessageIdOrThrow, setExchangePlayers} from "../store/
 
 export async function updateListOfPlayersOnMessageReactChanges(interaction: MessageReaction | PartialMessageReaction) {
 
+
     const exchange = await getExchangeBySignupMessageIdOrThrow(interaction.message.id)
 
     const usersInExchangePromises = interaction.users.cache

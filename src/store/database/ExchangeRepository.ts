@@ -13,7 +13,7 @@ export class ExchangeRepository {
             .selectFrom('exchanges')
             .selectAll()
             .where('signup_message_id', '=', signupMessageId)
-            .executeTakeFirstOrThrow(() => new Error("No open exchanges found for the reacted message "))
+            .executeTakeFirstOrThrow(() => new Error("No open exchanges found for the reacted message, signup message id: " + signupMessageId))
 
     }
 
