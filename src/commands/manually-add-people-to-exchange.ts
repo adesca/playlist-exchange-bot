@@ -11,45 +11,50 @@ const manuallyAddPeople = new SlashCommandBuilder()
             .setRequired(true))
 
 async function execute(interaction: ChatInputCommandInteraction) {
-    await interaction.reply({content: 'Working on it!', ephemeral: true})
+    try {
 
-    const messageId = interaction.options.getString("exchange-message-id")!
+        await interaction.reply({content: 'Working on it!', ephemeral: true})
 
-    const exchange = await getExchangeBySignupMessageIdOrThrow(messageId)
-    const message = await interaction.channel!.messages.fetch(messageId)
+        const messageId = interaction.options.getString("exchange-message-id")!
+
+        const exchange = await getExchangeBySignupMessageIdOrThrow(messageId)
+        const message = await interaction.channel!.messages.fetch(messageId)
 
 
-    const users = await message.reactions.cache.get('🎶')?.users.fetch()
+        const users = await message.reactions.cache.get('🎶')?.users.fetch()
 
-    if (users === undefined) return;
+        if (users === undefined) return;
 
-    const usersInExchangePromises = users
-        .filter(usersWithReactions => !usersWithReactions.bot)
-        .map(async userWithReactions => {
-            try {
-                const user = await interaction.guild!.members.fetch(userWithReactions.id)
+        const usersInExchangePromises = users
+            .filter(usersWithReactions => !usersWithReactions.bot)
+            .map(async userWithReactions => {
+                try {
+                    const user = await interaction.guild!.members.fetch(userWithReactions.id)
 
-                return {
-                    discordId: userWithReactions.id,
-                    toString: userWithReactions.toString(),
-                    serverNickname: user.nickname || userWithReactions.displayName,
-                    tag: userWithReactions.tag,
+                    return {
+                        discordId: userWithReactions.id,
+                        toString: userWithReactions.toString(),
+                        serverNickname: user.nickname || userWithReactions.displayName,
+                        tag: userWithReactions.tag,
+                    }
+                } catch (e) {
+                    console.log('User is no longer in discord, defaulting to normal user data for ', userWithReactions.tag)
+                    return {
+                        discordId: userWithReactions.id,
+                        toString: userWithReactions.toString(),
+                        serverNickname: userWithReactions.displayName,
+                        tag: userWithReactions.tag,
+                    }
                 }
-            } catch (e) {
-                console.log('User is no longer in discord, defaulting to normal user data for ', userWithReactions.tag)
-                return {
-                    discordId: userWithReactions.id,
-                    toString: userWithReactions.toString(),
-                    serverNickname: userWithReactions.displayName,
-                    tag: userWithReactions.tag,
-                }
-            }
 
-        })
-        .filter(maybeUser => maybeUser != undefined)
+            })
+            .filter(maybeUser => maybeUser != undefined)
 
-    const usersInExchange = await Promise.all(usersInExchangePromises)
-    await setExchangePlayers(exchange.exchangeName, usersInExchange)
+        const usersInExchange = await Promise.all(usersInExchangePromises)
+        await setExchangePlayers(exchange.exchangeName, usersInExchange)
+    } catch (e) {
+        console.log('Caught error ', e)
+    }
 
 }
 
