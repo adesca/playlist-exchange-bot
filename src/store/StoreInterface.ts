@@ -18,7 +18,7 @@ export interface Store {
 
      getExchangeBySignupMessageIdOrThrow(signupMessageId: string): Promise<Exchange>
 
-     setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime): Promise<void>
+     setExchangeEndDate(exchangeId: string, durationBeforeEndToSendReminder: Duration, exchangeEndDate: DateTime): Promise<void>
 
      setExchangePlayers(exchangeName: string, players: ExchangePlayer[]): Promise<void>
 }

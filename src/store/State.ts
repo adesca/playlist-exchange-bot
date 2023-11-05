@@ -38,8 +38,8 @@ export async function getExchangeBySignupMessageIdOrThrow(signupMessageId: strin
     return store.getExchangeBySignupMessageIdOrThrow(signupMessageId)
 }
 
-export async function setExchangeEndDate(exchangeId: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
-    return store.setExchangeEndDate(exchangeId, exchangeLength, exchangeEndDate)
+export async function setExchangeEndDate(exchangeId: string, durationBeforeEndToSendReminder: Duration, exchangeEndDate: DateTime) {
+    return store.setExchangeEndDate(exchangeId, durationBeforeEndToSendReminder, exchangeEndDate)
 }
 
 export async function setExchangePlayers(exchangeName: string, players: ExchangePlayer[]) {

@@ -116,11 +116,11 @@ export class DatabaseBackedStore implements Store {
         return this.convertExchangeEntityToExchange(exchange)
     }
 
-    async setExchangeEndDate(exchangeName: string, exchangeLength: Duration, exchangeEndDate: DateTime) {
+    async setExchangeEndDate(exchangeName: string, durationBeforeEndToSendReminder: Duration, exchangeEndDate: DateTime) {
         await db.updateTable('exchanges')
             .set({
                 exchange_end_date: exchangeEndDate.toJSDate(),
-                exchange_reminder_date: exchangeEndDate.minus(Duration.fromISO(configuration.remindAt)).toJSDate()
+                exchange_reminder_date: exchangeEndDate.minus(durationBeforeEndToSendReminder).toJSDate()
             })
             .where('exchange_name', '=', exchangeName)
             .executeTakeFirstOrThrow()

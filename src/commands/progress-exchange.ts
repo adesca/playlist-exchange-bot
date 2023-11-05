@@ -50,7 +50,7 @@ async function execute(interaction: ChatInputCommandInteraction) {
 
     const exchangeLength = Duration.fromISO(configuration.exchangeLength)
     const exchangeEndDate = DateTime.now().plus(exchangeLength)
-    await setExchangeEndDate(exchangeName, exchangeLength, exchangeEndDate)
+    await setExchangeEndDate(exchangeName, Duration.fromISO(configuration.remindAt), exchangeEndDate)
 
     const playerList = exchange.players
         .sort((a,b) => a.serverNickname.localeCompare(b.serverNickname))

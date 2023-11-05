@@ -13,7 +13,13 @@ export async function checkIfAnyExchangesNeedToSendRemindersOrAreFinished(client
 
         const reminderDateTime = exchange.exchangeReminderDate
         const exchangeEndDateTime = exchange.exchangeEndDate
-        const playlistExchangeChannel = checkThatChannelExistsAndIsTextBased(client.channels.cache.get(exchange.channelId))
+        let playlistExchangeChannel;
+        try {
+            playlistExchangeChannel = checkThatChannelExistsAndIsTextBased(client.channels.cache.get(exchange.channelId));
+        } catch (e) {
+            console.log("Caught an exception")
+            return;
+        }
 
 
         if (!exchange.reminderSent && now > reminderDateTime) {
