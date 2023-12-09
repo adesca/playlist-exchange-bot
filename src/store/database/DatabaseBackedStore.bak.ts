@@ -6,13 +6,13 @@ import {configuration} from "../../config";
 import {PlayerRepository} from "./PlayerRepository";
 import {ExchangeRepository} from "./ExchangeRepository";
 import {Store} from "../StoreInterface";
-import {getExchangeWithPlayers} from "../drizzle/DrizzleRepository";
 
 export class DatabaseBackedStore implements Store {
     playerRepository = new PlayerRepository();
     exchangeRepository = new ExchangeRepository()
-    async getExchangeByNameOrThrow(exchangeName: string): Promise<Exchange> {
-        return getExchangeWithPlayers(exchangeName)
+    async getExchangeByNameOrThrow(exchangeName: string) {
+        const queriedExchange = await this.exchangeRepository.getExchangeOrThrow(exchangeName)
+        return this.convertExchangeEntityToExchange(queriedExchange);
     }
 
     async getExchangeByNameOrUndefined(exchangeName: string): Promise<Exchange | undefined> {
